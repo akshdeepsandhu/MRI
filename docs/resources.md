@@ -16,5 +16,6 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 # Running imoco recon: 
 
 1. Once apptainer shell is active, activate virtual env with all the packages we need: `source /.venv/bin/activate`
-2. 
+2. Run recon (w/ field derivation): `python3 imoco_recon/imoco_py/recon_imoco.py /container_data/lung_mri/MRI_Raw --reg_flag 1 --device -1`
+3. Run recon (w/out field derivation): `python3 imoco_recon/imoco_py/recon_xdgrasp.py /container_data/lung_mri/MRI_Raw --device -1`
 

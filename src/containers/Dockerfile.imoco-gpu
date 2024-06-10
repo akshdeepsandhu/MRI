@@ -1,0 +1,28 @@
+FROM nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
+
+RUN yum -y install python3 epel-release python-pip git
+
+RUN pip3 install --no-cache-dir -U setuptools pip uv
+
+RUN python3 -m venv /usr/local/.venv && \
+    . /usr/local/.venv/bin/activate && \
+    uv pip install -U pip
+
+RUN . /usr/local/.venv/bin/activate && \
+    uv pip install --no-cache-dir "cupy-cuda114[all]==9.3.0"
+
+RUN . /usr/local/.venv/bin/activate && \
+    uv pip install numpy matplotlib sigpy==0.1.16 antspyx h5py pydicom
+
+COPY cpu-requirements.txt /tmp/
+
+RUN . /usr/local/.venv/bin/activate && \
+    uv pip install -r /tmp/cpu-requirements.txt
+
+WORKDIR /usr/src
+
+RUN git clone https://github.com/PulmonaryMRI/imoco_recon.git
+
+RUN mkdir -p /usr/data/sample_data
+
+ENTRYPOINT ["/bin/bash", "-c", "source /usr/local/.venv/bin/activate && exec \"$@\"", "--"]

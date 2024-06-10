@@ -3,9 +3,11 @@ FROM python:3.10-slim-buster
 RUN apt-get update && apt-get install -y git
 
 COPY cpu-requirements.txt /tmp/
+
 RUN pip install --upgrade pip
 RUN pip install uv
-RUN uv venv && \
+
+RUN uv venv .venv && \
     . .venv/bin/activate && \
     uv pip install -r /tmp/cpu-requirements.txt
 
@@ -14,3 +16,5 @@ WORKDIR /usr/src
 RUN git clone https://github.com/PulmonaryMRI/imoco_recon.git
 
 RUN mkdir -p /usr/data/sample_data
+
+ENTRYPOINT ["/bin/bash", "-c", "source .venv/bin/activate && exec \"$@\"", "--"]

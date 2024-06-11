@@ -20,7 +20,7 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 # Running imoco recon (GPU: 
 1. Once shell is active, activate virutal env `source /usr/local/.venv/bin/activate`
 2. Define useful variable: `imoco_dir=/usr/src/` ; `file_dir=/container_data/iMRHXXX/` 
-3. Convert raw .h5 file into correct format: `python3 imoco_recon/imoco_py/convert_uwute.py ${file_dir}/MRI_Raw`
+3. [Optional] Convert raw .h5 file into correct format: `python3 imoco_recon/imoco_py/convert_uwute.py ${file_dir}/MRI_Raw`
 4. Run recon: 
 	a. xd-grasp reconstruction: `python3 imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw`
 	b. mocolor reconstruction: `python3 imoco_recon/imoco_py/recon_imoco.py ${file_dir}/MRI_Raw --reg_flag 1 --lambda_TV 0.01`
@@ -29,7 +29,10 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 `
 module load singularity cuda11.4/toolkit/11.4.2
 singularity shell --nv --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif
-
+source /usr/local/.venv/bin/activate
+file_dir=/container_data/
+imoco_dir=/usr/src/
+python3 $imoco_dir/imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw
 `
 
 # Running interactive shell (CPU)

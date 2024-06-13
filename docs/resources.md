@@ -18,7 +18,7 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 													/mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif`
 
 # Running imoco recon (GPU: 
-1. Once shell is active, activate virutal env `source /usr/local/.venv/bin/activate`
+1. Once shell is active, activate virutal env `source /usr/local/.gpu_venv/bin/activate`
 2. Define useful variable: `imoco_dir=/usr/src/` ; `file_dir=/container_data/iMRHXXX/` 
 3. [Optional] Convert raw .h5 file into correct format: `python3 imoco_recon/imoco_py/convert_uwute.py ${file_dir}/MRI_Raw`
 4. Run recon: 
@@ -29,7 +29,7 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 `
 module load singularity cuda11.4/toolkit/11.4.2
 singularity shell --nv --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif
-source /usr/local/.venv/bin/activate
+source /usr/local/.gpu_venv/bin/activate
 file_dir=/container_data/
 imoco_dir=/usr/src/
 python3 $imoco_dir/imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw
@@ -42,7 +42,7 @@ python3 $imoco_dir/imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw
 
 # Running imoco recon (CPU):
 
-1. Once apptainer shell is active, activate virtual env with all the packages we need: `source /.venv/bin/activate`
+1. Once apptainer shell is active, activate virtual env with all the packages we need: `source /.gpu_venv/bin/activate`
 2. Run recon (w/ field derivation): `python3 imoco_recon/imoco_py/recon_imoco.py /container_data/lung_mri/MRI_Raw --reg_flag 1 --device -1`
 3. Run recon (w/out field derivation): `python3 imoco_recon/imoco_py/recon_xdgrasp.py /container_data/lung_mri/MRI_Raw --device -1`
 

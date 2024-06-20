@@ -23,7 +23,7 @@ all_paths_df = pd.DataFrame(all_paths, columns=['folder_path'])
 import os
 import pandas as pd
 import ray
-
+import re
 # Initialize Ray
 ray.init(ignore_reinit_error=True)
 
@@ -39,7 +39,7 @@ def find_ute_folders(path):
     for root, dirs, files in os.walk(path):
         for dir_name in dirs:
             dir_path = os.path.join(root, dir_name)
-            if dir_path.endswith('UTE'):
+            if dir_path.endswith('_UTE'):
                 ute_paths.append(dir_path)
     return ute_paths
 
@@ -68,4 +68,35 @@ print(f"Filtered paths have been written to {output_csv_path}")
 # Shutdown Ray
 ray.shutdown()
 
+
+def load_tri_mri_ids(path_to_csv):
+    df = pd.read_csv(path_to_csv)
+    melted_df = pd.melt(df, id_vars=['id', 'visits'], 
+                        value_vars=['visit1_date', 'visit2_date'], 
+                        var_name='visit_number', 
+                        value_name='visit_date')
+    
+    melted_df['visit'] = melted_df.apply(
+        lambda row: row['visits'].split(',')[0] if row['visit_number'] == 'visit1_date' else row['visits'].split(',')[1], 
+        axis=1
+    )
+    
+    melted_df['visit_id'] = melted_df['id'] + melted_df['visit']
+    melted_df = melted_df.drop(columns=['visits', 'visit_number', 'visit'])
+    melted_df = melted_df.sort_values(by='id').reset_index(drop=True)
+    
+    return melted_df
+
+
+def filter_paths_by_visit_ids(paths, visit_ids):
+    filtered_paths = [path for path in paths if any(re.search(visit_id, path) for visit_id in visit_ids)]
+    return filtered_paths
+
 # now let's read the database csv and find all the ones in the excel that rachel shared
+all_paths = pd.read_csv('data/all_ute_paths.csv')
+tri_mri_ids = load_tri_mri_ids('data/trimri_ute_list.csv')
+# get visit ids
+visit_ids = tri_mri_ids['visit_id'].tolist()
+all_ute_paths = all_paths['folder_path'].to_list()
+# only paths that exist 
+filtered_paths = filter_paths_by_visit_ids(all_ute_paths, visit_ids)

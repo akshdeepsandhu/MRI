@@ -2,7 +2,6 @@
 import pandas as pd
 import os
 
-
 base_directory = '/Volumes/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/'
 
 # List to store all paths

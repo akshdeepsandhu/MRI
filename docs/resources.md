@@ -4,7 +4,7 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 
 # HPC info: 
 - User mounted data at: `/mnt/cifs/ash.sandhu/bcchruser/`
-
+- 
 
 # List of resources 
 - https://github.com/PulmonaryMRI/
@@ -27,17 +27,20 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 
 # Script: (once in GPU node)
 `
+salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q
 module load singularity cuda11.4/toolkit/11.4.2
-singularity shell --nv --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif
+singularity shell --nv --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu_latest.sif
 source /usr/local/.gpu_venv/bin/activate
-file_dir=/container_data/
+file_dir=/container_data/iMRH0074B/
 imoco_dir=/usr/src/
 python3 $imoco_dir/imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw
+python3 $imoco_dir/imoco_recon/imoco_py/recon_imoco.py ${file_dir}/MRI_Raw --reg_flag 1 --device 0 
+python3 $imoco_dir/imoco_recon/imoco_py/dicom_creation.py ${file_dir}
 `
 
 # Running interactive shell (CPU)
 
-1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=12 --nodes=1`
+1. Allocate mem and run on HPC: `sallocc --mem=128G --cpus-per-task=12 --nodes=1`
 2. Run Apptainer Container with Mounted Directory: `singularity exec --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_cpu_1.0.sif /bin/bash`
 
 # Running imoco recon (CPU):

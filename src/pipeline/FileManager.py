@@ -32,6 +32,6 @@ if __name__ == "__main__":
         scratch_space_path = '/mnt/scratch/Precision/BioStats/ASandhu/data' 
         file_manager = FileManager(network_drive=network_drive_path, scratch_space=scratch_space_path)
         file_manager.copyFiles()
-        file_manager.delFiles()
+        #file_manager.delFiles()
     
     

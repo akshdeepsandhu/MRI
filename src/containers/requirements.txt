@@ -46,3 +46,4 @@ urllib3==2.2.1
 webcolors==1.13
 wget==3.2
 zenodo-get==1.6.1
+importlib-metadata==

@@ -2,6 +2,10 @@
 
 This is markdown file with useful links to resources on Pulmonary MRI imaging 
 
+# Loading conda
+source /mnt/common/Precision/Miniconda3/miniconda/etc/profile.d/conda.sh
+conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transfer
+
 # HPC info: 
 - User mounted data at: `/mnt/cifs/ash.sandhu/bcchruser/`
 - 

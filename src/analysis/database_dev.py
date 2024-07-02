@@ -22,6 +22,6 @@ def copy_directories_from_csv(csv_file_path, destination_base_path):
         copy_directory(source_path, destination_path)
 
 # Example usage
-csv_file_path = '/mnt/cifs/ash.sandhu/bcchruser/MRI/data/filtered_paths.csv'  # Path to your CSV file
-destination_base_path = '/mnt/scratch/Precision/BioStats/ASandhu/data'  # Base destination folder
+csv_file_path = '/mnt/cifs/ash.sandhu/bcchruser/MRI/data/filtered_paths.csv'  
+destination_base_path = '/mnt/scratch/Precision/BioStats/ASandhu/data' 
 copy_directories_from_csv(csv_file_path, destination_base_path)

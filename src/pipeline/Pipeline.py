@@ -20,3 +20,5 @@ class Pipeline:
 
     def endPipeline(self):
         print("Pipeline ended.")
+
+

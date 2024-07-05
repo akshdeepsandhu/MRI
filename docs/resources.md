@@ -15,13 +15,21 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 - https://github.com/PulmonaryMRI/imoco_recon
 - https://larsonlab.github.io/MRI-education-resources/Introduction.html
 
+# Running pcvipr shell (CPU)
+salloc --mem=128G --cpus-per-task=4
+module load singularity
+singularity shell --nv --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr.sif
+
+Gating_Track_85634307.pcvipr_track -dat_plus_dicom -f ScanArchive_604875MR750_20220907_085641943.h5 -export_kdata
+
+
 # Running interactive shell (GPU)
 1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`
 2. Run Apptainer sif with mounted dir: `singularity shell --nv \ 
 													--bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data \ 
 													/mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif`
 
-# Running imoco recon (GPU: 
+# Running imoco recon (GPU): 
 1. Once shell is active, activate virutal env `source /usr/local/.gpu_venv/bin/activate`
 2. Define useful variable: `imoco_dir=/usr/src/` ; `file_dir=/container_data/iMRHXXX/` 
 3. [Optional] Convert raw .h5 file into correct format: `python3 imoco_recon/imoco_py/convert_uwute.py ${file_dir}/MRI_Raw`
@@ -33,7 +41,7 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 `
 salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q
 module load singularity cuda11.4/toolkit/11.4.2
-singularity shell --nv --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu_latest.sif
+singularity shell --nv --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu_latest.sif
 source /usr/local/.gpu_venv/bin/activate
 file_dir=/container_data/iMRH0074B/
 imoco_dir=/usr/src/

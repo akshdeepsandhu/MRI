@@ -2,6 +2,11 @@
 
 This is markdown file with useful links to resources on Pulmonary MRI imaging 
 
+# Creating a container in apptainer
+module load apptainer
+apptainer build pcvipr_latest.sif docker-archive://orc20_pcvipr.tar.gz
+
+
 # Loading conda
 source /mnt/common/Precision/Miniconda3/miniconda/etc/profile.d/conda.sh
 conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transfer
@@ -17,11 +22,13 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 
 # Running pcvipr shell (CPU)
 salloc --mem=128G --cpus-per-task=4
-module load singularity
-singularity shell --nv --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr.sif
-
+module load apptainer
+apptainer shell --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif
 Gating_Track_85634307.pcvipr_track -dat_plus_dicom -f ScanArchive_604875MR750_20220907_085641943.h5 -export_kdata
+pcvipr_recon_binary -f ScanArchive_604875MR750_20220907_085641943.h5 -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
 
+
+# IMOCO 
 
 # Running interactive shell (GPU)
 1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`

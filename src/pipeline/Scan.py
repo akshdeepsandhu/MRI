@@ -12,7 +12,7 @@ class Scan:
         self.scan_id = scan_id
         self.raw_data_path = raw_data_path
         self.scratch_path = os.path.join(scratch_path, self.scan_id)
-        self.dcm_folder_path = os.path.join(self.scratch_path, "DCM")
+        self.processed_data_folder_path = os.path.join(self.scratch_path, "processed_data")
         self.slurm_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_pre_process.sh")
         self.h5_file_name = None
 
@@ -49,12 +49,13 @@ class Scan:
             logging.error(f"Directory not found: {self.scratch_path}")
             raise
 
-    def check_and_create_dcm_folder(self):
-        if not os.path.exists(self.dcm_folder_path):
-            os.makedirs(self.dcm_folder_path)
-            logging.info(f"DCM folder created at {self.dcm_folder_path}")
+    def check_and_create_processed_data_folder(self):
+        if not os.path.exists(self.processed_data_folder_path):
+            os.makedirs(self.processed_data_folder_path)
+            logging.info(f"Processed data folder created at {self.processed_data_folder_path}")
         else:
-            logging.info(f"DCM folder already exists at {self.dcm_folder_path}")
+            logging.info(f"Processed data folder already exists at {self.processed_data_folder_path}")
+
 
     def generate_slurm_script(self):
         template_path = 'slurm_template.sh'

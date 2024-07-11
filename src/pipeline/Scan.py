@@ -92,7 +92,7 @@ class Scan:
         h5_file = self.get_h5_file()
         if not h5_file:
             raise FileNotFoundError("No .h5 file found in the copied folder. Aborting process.")
-        self.check_and_create_dcm_folder()
+        self.check_and_create_processed_data_folder()
         self.generate_slurm_script()
         self.submit_slurm_job()
 

@@ -2,3 +2,4 @@ data/*
 *.DS_Store
 database_env/*
 src/pipeline/__pycache__
+src/pipeline/log/*

@@ -73,6 +73,19 @@ class Scan:
             logging.error(f"Error handling template file: {e}")
             raise
 
+    def submit_slurm_job(self):
+        try:
+            result = subprocess.run(f'sbatch {self.slurm_script_path}',
+                                    cwd=self.scratch_path,
+                                    shell=True,
+                                    check=True,
+                                    capture_output=True,
+                                    text=True)
+            logging.info(f"SLURM job submitted successfully. Output:\n{result.stdout}")
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
+            raise
+        
     def run(self):
         self.copy_raw_data()
         h5_file = self.get_h5_file()
@@ -82,13 +95,6 @@ class Scan:
         self.generate_slurm_script()
         self.submit_slurm_job()
 
-    def submit_slurm_job(self):
-        try:
-            result = subprocess.run(['sbatch', self.slurm_script_path], check=True, capture_output=True, text=True)
-            logging.info(f"SLURM job submitted successfully. Output:\n{result.stdout}")
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
-            raise
 
 if __name__ == "__main__":
     raw_data_path = "/mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0100/iMRH0100B/pfiles/Exam9396_Series3_UTE"

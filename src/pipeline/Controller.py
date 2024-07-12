@@ -54,20 +54,16 @@ class Controller:
                 futures.append(future)
 
                 if (i + 1) % batch_size == 0 or (i + 1) == len(self.scans):
-                    # Wait for the current batch to complete
                     wait(futures)
                     for future in futures:
                         try:
-                            future.result()  # This will raise any exceptions caught in the task
+                            future.result()  
                         except Exception as e:
                             logging.error(f"Error in scan job: {e}")
                     futures = []
 
     def load_and_prepare_scans(self):
-        # Load scans from CSV
         self.load_scans_from_csv()
-
-        # Prepare scans in parallel
         with ThreadPoolExecutor() as executor:
             futures = {executor.submit(self.prepare_scan, scan): scan for scan in self.scans}
             for future in as_completed(futures):

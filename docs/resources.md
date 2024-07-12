@@ -24,7 +24,6 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 salloc --mem=128G --cpus-per-task=4
 module load apptainer
 apptainer shell --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif
-Gating_Track_85634307.pcvipr_track -dat_plus_dicom -f ScanArchive_604875MR750_20220907_085641943.h5 -export_kdata
 pcvipr_recon_binary -f ScanArchive_604875MR750_20220907_085641943.h5 -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
 
 

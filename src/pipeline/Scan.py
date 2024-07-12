@@ -103,19 +103,11 @@ class Scan:
             logging.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
             raise
         
-    def run(self):
+    def prep(self):
         self.copy_raw_data()
         h5_file = self.get_h5_file()
         if not h5_file:
             raise FileNotFoundError("No .h5 file found in the copied folder. Aborting process.")
         self.check_and_create_processed_data_folder()
         self.generate_slurm_script()
-        self.submit_slurm_job()
 
-
-if __name__ == "__main__":
-    raw_data_path = "/mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0100/iMRH0100B/pfiles/Exam9396_Series3_UTE"
-    scan_id = raw_data_path.split('/')[-3]
-    scratch_path = "/mnt/scratch/Precision/BioStats/ASandhu/data"
-    test_scan = Scan(scan_id=scan_id, raw_data_path=raw_data_path, scratch_path=scratch_path)
-    test_scan.run()

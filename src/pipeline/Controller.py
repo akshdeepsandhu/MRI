@@ -37,13 +37,26 @@ class Controller:
             logging.error(f"Error preparing scan {scan.scan_id}: {e}")
             raise
 
+    def load_and_prepare_scans(self):
+        self.load_scans_from_csv()
+        with ThreadPoolExecutor() as executor:
+            futures = {executor.submit(self.prepare_scan, scan): scan for scan in self.scans}
+            for future in as_completed(futures):
+                scan = futures[future]
+                try:
+                    future.result()
+                    logging.info(f"Prepared scan {scan.scan_id}")
+                except Exception as e:
+                    logging.error(f"Error preparing scan {scan.scan_id}: {e}")
+
+
     def run_preprocessing(self):
         batch_size = 5
         futures = []
 
         def submit_job(scan):
             try:
-                scan.submit_slurm_job()
+                scan.submit_preprocess_job()
             except Exception as e:
                 logging.error(f"Error submitting SLURM job for scan {scan.scan_id}: {e}")
                 raise
@@ -62,17 +75,15 @@ class Controller:
                             logging.error(f"Error in scan job: {e}")
                     futures = []
 
-    def load_and_prepare_scans(self):
-        self.load_scans_from_csv()
-        with ThreadPoolExecutor() as executor:
-            futures = {executor.submit(self.prepare_scan, scan): scan for scan in self.scans}
-            for future in as_completed(futures):
-                scan = futures[future]
-                try:
-                    future.result()
-                    logging.info(f"Prepared scan {scan.scan_id}")
-                except Exception as e:
-                    logging.error(f"Error preparing scan {scan.scan_id}: {e}")
+    def run_imoco_processing(self):
+            for i, scan in enumerate(self.scans):
+                try: 
+                    scan.submit_imoco_job()
+                except Exception as e: 
+                    logging.error(f"Error submitting iMOCO job for scan {scan.scan_id}: {e}")
+                raise    
+
+    
 
 if __name__ == "__main__":
     csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"

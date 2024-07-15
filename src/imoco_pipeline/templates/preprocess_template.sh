@@ -1,12 +1,15 @@
 #!/bin/bash
-#SBATCH --mem=128G
+#SBATCH --mem=32G
 #SBATCH --cpus-per-task=4
-#SBATCH --error=%x-%j.error
+
+# load modules
 shopt -s expand_aliases
 source /etc/profile.d/hpcenv.sh
 unload_bcchr
 load_cvmfs
 module load apptainer
+
+# execute pre-processing
 apptainer exec --bind {SCRATCH_PATH}:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif bash -c "
 mkdir -p /container_data/processed_data
 cd /container_data/processed_data

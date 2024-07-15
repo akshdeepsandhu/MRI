@@ -48,3 +48,5 @@ if __name__ == "__main__":
     csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"
     controller = Controller(csv_file_path)
     controller.load_and_prepare_scans()
+    for scan in controller.scans: 
+        scan.copy_dcm_files('/mnt/cifs/ash.sandhu/bcchruser/MRI/data/imoco_processed_data/')

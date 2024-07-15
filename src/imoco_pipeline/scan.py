@@ -14,24 +14,29 @@ class Scan:
         self.h5_file_name = None
         self.script_generator = None
         self.job_manager = JobManager(self.scratch_path)
+    
 
     def setup_logging(self):
         logger = logging.getLogger()
-        logger.setLevel(logging.INFO)
+        if not logger.hasHandlers():
+            logger.setLevel(logging.INFO)
 
-        fh = logging.FileHandler(f'logs/mri_processing_{self.scan_id}.log')
-        fh.setLevel(logging.INFO)
+            fh = logging.FileHandler(f'logs/mri_processing_{self.scan_id}.log')
+            fh.setLevel(logging.INFO)
 
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.INFO)
+            ch = logging.StreamHandler()
+            ch.setLevel(logging.INFO)
 
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        ch.setFormatter(formatter)
+            formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            fh.setFormatter(formatter)
+            ch.setFormatter(formatter)
 
-        logger.addHandler(fh)
-        logger.addHandler(ch)
+            logger.addHandler(fh)
+            logger.addHandler(ch)
 
+    def copy_dcm_files(self,dest_path):
+        self.file_handler.copy_processed_dcm(dest_path)
+    
     def prep(self):
         self.file_handler.copy_raw_data()
         self.h5_file_name = self.file_handler.get_h5_file()
@@ -45,4 +50,6 @@ class Scan:
 
         imoco_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_imoco_process.sh")
         self.script_generator.generate_imoco_script(imoco_script_path)
+
+
 

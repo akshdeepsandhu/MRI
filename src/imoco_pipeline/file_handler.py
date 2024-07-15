@@ -42,11 +42,12 @@ class FileHandler:
 
     def copy_processed_dcm(self, destination_folder_path):
         processed_data_folder_path = os.path.join(self.scratch_path, "processed_data")
+        destination_folder_path = os.path.join(destination_folder_path,self.scan_id)
         if not os.path.exists(processed_data_folder_path):
              raise FileNotFoundError(f"Processed data folder does not exist: {processed_data_folder_path}")
 
         if not os.path.exists(destination_folder_path):
-             raise FileNotFoundError(f"Destination folder does not exist: {destination_folder_path}")
+             os.makedirs(destination_folder_path)
         
         for file in os.listdir(processed_data_folder_path):
             if file.endswith(".DCM"): 
@@ -58,6 +59,5 @@ class FileHandler:
                 except Exception as e: 
                     logging.error(f"Error copying {source_file} to {destination_file}: {e}")
                     raise
-    
-            
+                    
 

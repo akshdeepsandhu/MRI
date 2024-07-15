@@ -39,3 +39,25 @@ class FileHandler:
             logging.info(f"Processed data folder created at {processed_data_folder_path}")
         else:
             logging.info(f"Processed data folder already exists at {processed_data_folder_path}")
+
+    def copy_processed_dcm(self, destination_folder_path):
+        processed_data_folder_path = os.path.join(self.scratch_path, "processed_data")
+        if not os.path.exists(processed_data_folder_path):
+             raise FileNotFoundError(f"Processed data folder does not exist: {processed_data_folder_path}")
+
+        if not os.path.exists(destination_folder_path):
+             raise FileNotFoundError(f"Destination folder does not exist: {destination_folder_path}")
+        
+        for file in os.listdir(processed_data_folder_path):
+            if file.endswith(".DCM"): 
+                source_file = os.path.join(processed_data_folder_path,file)
+                destination_file = os.path.join(destination_folder_path,file)
+                try: 
+                    shutil.copy2(source_file,destination_file)
+                    logging.info(f"Copied {source_file} to {destination_file}")
+                except Exception as e: 
+                    logging.error(f"Error copying {source_file} to {destination_file}: {e}")
+                    raise
+    
+            
+

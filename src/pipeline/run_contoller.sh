@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=controller_job   
 #SBATCH --output=controller_job.out 
-#SBATCH --error=controller_job.err  
 #SBATCH --nodes=1                   
 #SBATCH --cpus-per-task=4           
 #SBATCH --mem=64GB                   

@@ -26,7 +26,7 @@ class ScriptGenerator:
 
     def generate_preprocess_script(self, script_path):
         self.generate_script(
-            template_path='preprocess_template.sh',
+            template_path='templates/preprocess_template.sh',
             script_path=script_path,
             replacements={
                 '{SCRATCH_PATH}': self.scratch_path,
@@ -36,7 +36,7 @@ class ScriptGenerator:
 
     def generate_imoco_script(self, script_path):
         self.generate_script(
-            template_path='imoco_termplate.sh',
+            template_path='templates/imoco_template.sh',
             script_path=script_path,
             replacements={
                 '{SCRATCH_PATH}': self.scratch_path,

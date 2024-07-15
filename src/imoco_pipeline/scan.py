@@ -1,14 +1,14 @@
 import logging
 import os
-from imoco_pipeline.file_handler import FileHandler
-from imoco_pipeline.script_generator import ScriptGenerator
-from  imoco_pipeline.job_manager import JobManager 
+from file_handler import FileHandler
+from script_generator import ScriptGenerator
+from  job_manager import JobManager 
 
 class Scan:
     def __init__(self, scan_id, raw_data_path, scratch_path):
-        self.setup_logging()
         self.scan_id = scan_id
         self.raw_data_path = raw_data_path
+        self.setup_logging()
         self.file_handler = FileHandler(raw_data_path, scratch_path, scan_id)
         self.scratch_path = self.file_handler.scratch_path
         self.h5_file_name = None
@@ -19,7 +19,7 @@ class Scan:
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
 
-        fh = logging.FileHandler('log/mri_processing_{self.scan_id}.log')
+        fh = logging.FileHandler(f'logs/mri_processing_{self.scan_id}.log')
         fh.setLevel(logging.INFO)
 
         ch = logging.StreamHandler()

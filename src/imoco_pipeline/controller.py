@@ -14,7 +14,6 @@ class Controller:
             csv_paths = pd.read_csv(self.csv_file_path)
             for i, row in csv_paths.iterrows():
                 raw_data_path = row['raw_data_path']
-                raw_data_path = row['raw_data_path']
                 scan_id = raw_data_path.split('/')[-3]
                 scan = Scan(scan_id, raw_data_path, self.scratch_path)
                 self.scans.append(scan)
@@ -25,22 +24,15 @@ class Controller:
         except KeyError as e:
             logging.error(f"CSV file is missing required columns: {e}")
             raise
-    
-    def prepare_scan(self, scan):
-        try:
-            scan.prep()
-        except Exception as e:
-            logging.error(f"Error preparing scan {scan.scan_id}: {e}")
-            raise
-    
+        
     def load_and_prepare_scans(self):
         self.load_scans_from_csv()
-        with ThreadPoolExecutor() as executor:
-            futures = {executor.submit(self.prepare_scan, scan): scan for scan in self.scans}
-            for future in as_completed(futures):
-                scan = futures[future]
-                future.result()
-                logging.info(f"Prepared scan {scan.scan_id}")
+        for scan in self.scans:
+            try:
+                scan.prep()
+            except Exception as e:
+                logging.error(f"Error preparing scan {scan.scan_id}: {e}")
+            raise
 
     def run_imoco(self):
         for scan in self.scans: 

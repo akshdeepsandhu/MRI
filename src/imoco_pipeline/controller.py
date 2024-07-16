@@ -41,13 +41,39 @@ class Controller:
                 scan = futures[future]
                 future.result()
                 logging.info(f"Prepared scan {scan.scan_id}")
+
+    def run_imoco(self):
+        for scan in self.scans: 
+            try:
+                scan.run_imoco_script()
+            except Exception as e: 
+                logging.error(f"Error running imoco for scan {scan.scan_id}: {e}")
+                raise
+
+
+    def run_preprocess(self):
+        for scan in self.scans:
+            try: 
+                scan.run_preprcess_script()    
+            except Exception as e: 
+                logging.error(f"Error running pre-processing for scan {scan.scan_id}: {e}")
+                raise
     
+    def copy_dcm(self):
+        for scan in controller.scans: 
+            try: 
+                dest_path = '/mnt/cifs/ash.sandhu/bcchruser/MRI/data/imoco_processed_data/'
+                scan.copy_dcm_files(dest_path)
+            except Exception as e: 
+                logging.error(f"Error transfering files for scan {scan.scan_id}: {e}")
+                raise
+
 
 if __name__ == "__main__":
     csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"
     controller = Controller(csv_file_path)
     controller.load_and_prepare_scans()
-    for scan in controller.scans: 
-        scan.copy_dcm_files('/mnt/cifs/ash.sandhu/bcchruser/MRI/data/imoco_processed_data/')
-        scan.run_preprcess_script()
-        scan.run_imoco_script()
+    controller.run_preprocess()
+    controller.run_imoco()
+    controller.copy_dcm()
+   

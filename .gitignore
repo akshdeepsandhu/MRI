@@ -3,3 +3,6 @@ data/*
 database_env/*
 src/pipeline/__pycache__
 src/pipeline/log/*
+src/imoco_pipeline/__pycache__/*
+src/imoco_pipeline/logs/*
+

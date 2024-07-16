@@ -11,10 +11,6 @@ apptainer build pcvipr_latest.sif docker-archive://orc20_pcvipr.tar.gz
 source /mnt/common/Precision/Miniconda3/miniconda/etc/profile.d/conda.sh
 conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transfer
 
-# HPC info: 
-- User mounted data at: `/mnt/cifs/ash.sandhu/bcchruser/`
-- 
-
 # List of resources 
 - https://github.com/PulmonaryMRI/
 - https://github.com/PulmonaryMRI/imoco_recon
@@ -24,13 +20,13 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 salloc --mem=128G --cpus-per-task=4
 module load apptainer
 apptainer shell --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif
-pcvipr_recon_binary -f ScanArchive_604875MR750_20220907_085641943.h5 -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
+pcvipr_recon_binary -f ScanArchive_604875MR750_20221215_151036572.h5 -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
 
 
 # IMOCO 
 
 # Running interactive shell (GPU)
-1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`
+1. Allocate mem and run on HPC: `salloc --mem=32G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`
 2. Run Apptainer sif with mounted dir: `singularity shell --nv \ 
 													--bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data \ 
 													/mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif`
@@ -58,8 +54,8 @@ python3 $imoco_dir/imoco_recon/imoco_py/dicom_creation.py ${file_dir}
 
 # Running interactive shell (CPU)
 
-1. Allocate mem and run on HPC: `sallocc --mem=128G --cpus-per-task=12 --nodes=1`
-2. Run Apptainer Container with Mounted Directory: `singularity exec --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_cpu_1.0.sif /bin/bash`
+1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=12 --nodes=1`
+2. Run Apptainer Container with Mounted Directory: `singularity shell --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_cpu.sif /bin/bash`
 
 # Running imoco recon (CPU):
 

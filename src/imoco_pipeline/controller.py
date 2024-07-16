@@ -32,7 +32,7 @@ class Controller:
                 scan.prep()
             except Exception as e:
                 logging.error(f"Error preparing scan {scan.scan_id}: {e}")
-            raise
+                raise
 
     def run_imoco(self):
         for scan in self.scans: 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"
     controller = Controller(csv_file_path)
     controller.load_and_prepare_scans()
-    controller.run_preprocess()
-    controller.run_imoco()
-    controller.copy_dcm()
+    #controller.run_preprocess()
+    #controller.run_imoco()
+    #controller.copy_dcm()
    

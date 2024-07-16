@@ -13,8 +13,8 @@ class Scan:
         self.scratch_path = self.file_handler.scratch_path
         self.h5_file_name = None
         self.script_generator = None
-        self.imoco_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_imoco_process.sh")
-        self.preprocess_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_pre_process.sh")
+        self.imoco_script_path = os.path.join(self.scratch_path, f"scripts/run_{self.scan_id}_imoco_process.sh")
+        self.preprocess_script_path = os.path.join(self.scratch_path, f"scripts/run_{self.scan_id}_pre_process.sh")
         self.job_manager = JobManager(self.scratch_path)
     
 
@@ -50,7 +50,6 @@ class Scan:
         self.h5_file_name = self.file_handler.get_h5_file()
         if not self.h5_file_name:
             raise FileNotFoundError("No .h5 file found in the copied folder. Aborting process.")
-        self.file_handler.check_and_create_processed_data_folder()
         # generate slurm scripts
         self.script_generator = ScriptGenerator(self.scratch_path, self.h5_file_name, self.scan_id)
         self.script_generator.generate_preprocess_script(self.preprocess_script_path)

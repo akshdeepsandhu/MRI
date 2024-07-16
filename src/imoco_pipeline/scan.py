@@ -13,6 +13,8 @@ class Scan:
         self.scratch_path = self.file_handler.scratch_path
         self.h5_file_name = None
         self.script_generator = None
+        self.imoco_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_imoco_process.sh")
+        self.preprocess_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_pre_process.sh")
         self.job_manager = JobManager(self.scratch_path)
     
 
@@ -36,6 +38,12 @@ class Scan:
 
     def copy_dcm_files(self,dest_path):
         self.file_handler.copy_processed_dcm(dest_path)
+
+    def run_imoco_script(self):
+        self.job_manager.submit_slurm_job(self.imoco_script_path)
+    
+    def run_preprcess_script(self):
+        self.job_manager.submit_slurm_job(self.preprocess_script_path)
     
     def prep(self):
         self.file_handler.copy_raw_data()
@@ -43,13 +51,13 @@ class Scan:
         if not self.h5_file_name:
             raise FileNotFoundError("No .h5 file found in the copied folder. Aborting process.")
         self.file_handler.check_and_create_processed_data_folder()
-
+        # generate slurm scripts
         self.script_generator = ScriptGenerator(self.scratch_path, self.h5_file_name, self.scan_id)
-        preprocess_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_pre_process.sh")
-        self.script_generator.generate_preprocess_script(preprocess_script_path)
+        self.script_generator.generate_preprocess_script(self.preprocess_script_path)
+        self.script_generator.generate_imoco_script(self.imoco_script_path)
 
-        imoco_script_path = os.path.join(self.scratch_path, f"run_{self.scan_id}_imoco_process.sh")
-        self.script_generator.generate_imoco_script(imoco_script_path)
+
+
 
 
 

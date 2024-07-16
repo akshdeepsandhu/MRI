@@ -41,8 +41,7 @@ class Controller:
                 scan = futures[future]
                 future.result()
                 logging.info(f"Prepared scan {scan.scan_id}")
-
-
+    
 
 if __name__ == "__main__":
     csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"
@@ -50,3 +49,5 @@ if __name__ == "__main__":
     controller.load_and_prepare_scans()
     for scan in controller.scans: 
         scan.copy_dcm_files('/mnt/cifs/ash.sandhu/bcchruser/MRI/data/imoco_processed_data/')
+        scan.run_preprcess_script()
+        scan.run_imoco_script()

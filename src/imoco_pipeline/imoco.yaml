@@ -1,0 +1,3 @@
+gpcc_scratch_path: /mnt/scratch/Precision/BioStats/ASandhu/data/
+csv_file_path: /mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv
+logs: 'logs/imoco_processing.log'

@@ -87,5 +87,6 @@ def wait_for_job_completion(job_id):
             logging.info(f"Job {job_id} has completed.")
             break
         else:
-            logging.info(f"Job {job_id} is still running. Checking again in 120 seconds.")
-            sleep(200)
+            wait_time = 200
+            logging.info(f"Job {job_id} is still running. Checking again in {wait_time} seconds.")
+            sleep(wait_time)

@@ -57,8 +57,6 @@ class Scan:
         submit_slurm_job(script_path=self.pcvipr_script,
                          cwd_path=self.scan_data_path)
     
-    def clean_raw_data_dir(self):
-        subprocess.run(['rm',self.scan_data_path,])
 
     
 

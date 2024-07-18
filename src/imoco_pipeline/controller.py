@@ -2,6 +2,7 @@ import pandas as pd
 import logging 
 from scan import Scan
 from utils import setup_logging
+import yaml 
 
 class Controller: 
     def __init__(self, gpcc_scartch_path):
@@ -32,15 +33,17 @@ class Controller:
     def run_pcvipr(self):
         for scan in self.scans: 
             scan.pcvipr()
+    
 
 
 
 if __name__ == "__main__":
-    setup_logging('logs/imoco_processing.log')
-    csv_file_path = "/mnt/cifs/ash.sandhu/bcchruser/MRI/data/mri_scan_paths.csv"
-    gpcc_scratch_path = "/mnt/scratch/Precision/BioStats/ASandhu/data/"
-    controller = Controller(gpcc_scratch_path)
-    controller.load_scans_from_csv(csv_file_path)
+    # load paths
+    with open('imoco.yaml', 'r') as file:
+        yaml_data = yaml.safe_load(file)
+    setup_logging(yaml_data['logs'])
+    controller = Controller(yaml_data['gpcc_scratch_path'])
+    controller.load_scans_from_csv(yaml_data['csv_file_path'])
     controller.copy_scan_data()
     controller.run_pcvipr()
 

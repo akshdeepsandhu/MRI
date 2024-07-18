@@ -18,6 +18,3 @@ rm *.txt
 rm *.dat
 rm *.complex
 "
-
-with open('imoco.yaml', 'r') as file:
-    data = yaml.safe_load(file)

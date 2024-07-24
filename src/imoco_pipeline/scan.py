@@ -3,8 +3,8 @@ import logging
 import shutil
 import subprocess
 import glob
-from utils import generate_pcvipr_script, submit_slurm_job
 
+from utils import generate_pcvipr_script, generate_imoco_script, submit_slurm_job
 class Scan:
     def __init__(self, scan_id, raw_data_path, gpcc_scratch_path):
         self.scan_id = scan_id
@@ -15,6 +15,7 @@ class Scan:
         # vars for later
         self.h5_file_name = None
         self.pcvipr_script = os.path.join(gpcc_scratch_path,scan_id,"scripts","pcvipr.sh")
+        self.imoco_script = os.path.join(gpcc_scratch_path,scan_id,"scripts","imoco.sh")
 
     def copy_raw_data(self):
         logging.info(f"Copying files from {self.raw_data_path} to {self.scan_data_path}.")
@@ -57,7 +58,16 @@ class Scan:
         submit_slurm_job(script_path=self.pcvipr_script,
                          cwd_path=self.scan_data_path)
     
-
+    def imoco(self):
+        # run imoco 
+        # make script
+        logging.info(f"Creating imoco script for {self.scan_id}")
+        generate_imoco_script(script_path=self.imoco_script,
+                             scan_data_path=self.scan_data_path)
+        logging.info(f"Running imoco script for {self.scan_id}")
+        # submit script
+        submit_slurm_job(script_path=self.imoco_script,
+                         cwd_path=self.scan_data_path)
     
 
 

@@ -34,6 +34,10 @@ class Controller:
         for scan in self.scans: 
             scan.pcvipr()
     
+    def run_imoco(self):
+        for scan in self.scans: 
+            scan.imoco()
+
 
 
 
@@ -46,6 +50,7 @@ if __name__ == "__main__":
     controller.load_scans_from_csv(yaml_data['csv_file_path'])
     controller.copy_scan_data()
     controller.run_pcvipr()
+    controller.run_imoco()
 
 
    

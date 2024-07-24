@@ -44,7 +44,7 @@ def generate_script(template_path, script_path, replacements):
             logging.error(f"Error handling template file: {e}")
             raise
 
-def generate_pcvipr_script(script_path,scan_data_path, h5_file_name):
+def generate_pcvipr_script(script_path, scan_data_path, h5_file_name):
     generate_script(
         template_path='templates/pcvipr_template.sh',
         script_path=script_path,
@@ -54,13 +54,12 @@ def generate_pcvipr_script(script_path,scan_data_path, h5_file_name):
         }
     )
 
-def generate_imoco_script(self, script_path):
-    self.generate_script(
+def generate_imoco_script(script_path, scan_data_path):
+    generate_script(
         template_path='templates/imoco_template.sh',
         script_path=script_path,
         replacements={
-            '{SCRATCH_PATH}': self.scratch_path,
-            '{SCAN_ID}': self.scan_id
+            '{SCAN_DATA_PATH}': scan_data_path
         }
     )
 

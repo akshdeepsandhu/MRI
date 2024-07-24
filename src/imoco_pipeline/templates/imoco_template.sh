@@ -27,5 +27,8 @@ mkdir imoco_recon
 mv *.DCM imoco_recon/
 mkdir base_recon
 mv *.dcm base_recon/
+find . -maxdepth 1 ! -name '*.DCM' ! -name '*.dcm' ! -name 'MRI_Raw.h5' ! -name '.' -exec rm -rf {} +
 "
+
+
 

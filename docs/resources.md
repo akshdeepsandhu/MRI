@@ -25,6 +25,14 @@ pcvipr_recon_binary -f ScanArchive_604875MR750_20221215_151036572.h5 -pils -dat_
 
 # IMOCO 
 
+
+## Running pipeline 
+1. run `activate_imoco_transfer` in bash to ensure correct env is being used
+2. check imoco.yml 
+3. check mri_scan_paths.csv is up to date 
+4. Navigate to source directory with controller.py file
+5. run `nohup python controller.py`
+
 # Running interactive shell (GPU)
 1. Allocate mem and run on HPC: `salloc --mem=32G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`
 2. Run Apptainer sif with mounted dir: `singularity shell --nv \ 

@@ -30,7 +30,7 @@ class Controller:
         logging.info(f"Processing scan {scan.scan_id}")
         scan.setup_dirs()
         scan.pcvipr()
-        scan.imoco()
+        scan.imoco_lammy()
 
     def process_scans_in_batches(self, batch_size=2):
         for i in range(0, len(self.scans), batch_size):

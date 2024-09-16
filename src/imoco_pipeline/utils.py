@@ -63,6 +63,17 @@ def generate_imoco_script(script_path, scan_data_path):
         }
     )
 
+def generate_imoco_script_lammy(script_path, scan_data_path, lammy):
+    generate_script(
+        template_path='templates/imoco_template_lammy.sh',
+        script_path=script_path,
+        replacements={
+            '{SCAN_DATA_PATH}' : scan_data_path,
+            '{LAMMY}' : lammy,
+        }
+    )
+
+
 def submit_slurm_job(script_path, cwd_path):
     try:
         result = subprocess.run(f'sbatch {script_path}',

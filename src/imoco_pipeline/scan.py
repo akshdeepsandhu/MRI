@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import glob
 
-from utils import generate_pcvipr_script, generate_imoco_script, submit_slurm_job
+from utils import generate_pcvipr_script, generate_imoco_script, generate_imoco_script_lammy, submit_slurm_job
 class Scan:
     def __init__(self, scan_id, raw_data_path, gpcc_scratch_path):
         self.scan_id = scan_id
@@ -69,5 +69,19 @@ class Scan:
         submit_slurm_job(script_path=self.imoco_script,
                          cwd_path=self.scan_data_path)
     
+    def imoco_lammy(self):
+        # run imoco 
+        # make script
+        logging.info(f"Creating imoco script for {self.scan_id}")
+        lammy_list = [0,0.01,0.025,0.05,0.075,0.1]
+        for lammy in lammy_list:
+            generate_imoco_script_lammy(script_path=self.imoco_script,
+                                scan_data_path=self.scan_data_path, 
+                                lammy=lammy
+                                )
+            logging.info(f"Running imoco script for {self.scan_id} with {lammy} regularization")
+            # submit script
+            submit_slurm_job(script_path=self.imoco_script,
+                            cwd_path=self.scan_data_path)
 
 

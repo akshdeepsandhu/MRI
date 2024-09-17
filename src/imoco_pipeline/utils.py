@@ -69,7 +69,7 @@ def generate_imoco_script_lammy(script_path, scan_data_path, lammy):
         script_path=script_path,
         replacements={
             '{SCAN_DATA_PATH}' : scan_data_path,
-            '{LAMMY}' : lammy,
+            '{LAMMY}' : str(lammy),
         }
     )
 

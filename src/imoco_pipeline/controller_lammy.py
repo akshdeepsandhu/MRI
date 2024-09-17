@@ -45,7 +45,7 @@ class Controller:
 
 if __name__ == "__main__":
     # Load paths
-    with open('imoco.yaml', 'r') as file:
+    with open('imoco_lammy.yaml', 'r') as file:
         yaml_data = yaml.safe_load(file)
     setup_logging(yaml_data['logs'])
     controller = Controller(yaml_data['gpcc_scratch_path'])

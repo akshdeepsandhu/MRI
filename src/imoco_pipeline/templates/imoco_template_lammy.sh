@@ -23,11 +23,11 @@ python3 \$imoco_dir/recon_imoco.py MRI_Raw --reg_flag 1 --lambda_TV {LAMMY}
 echo '----- Converting to DICOM -----'
 python3 \$imoco_dir/dicom_creation.py \$file_dir
 echo '----- Copying data -----'
-mkdir imoco_recon
-mv *.DCM imoco_recon/
+mkdir -p imoco_recon_{LAMMY}
+mv *.DCM imoco_recon_{LAMMY}/
 mkdir base_recon
 mv *.dcm base_recon/
-find . -maxdepth 1 ! -name 'base_recon' ! -name 'imoco_recon' ! -name '.' -exec rm -rf {} +
+find . -maxdepth 1 ! -name 'base_recon' ! -name 'imoco_recon_{LAMMY}' ! -name '.' -exec rm -rf {} +
 "
 
 

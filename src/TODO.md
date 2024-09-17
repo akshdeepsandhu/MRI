@@ -5,8 +5,8 @@
 - iMRH0083B [Incomplete] --> issue with the actualy .h5 file
 - iMRH0040D [Completed]
 - iMRH0041C [Completed]
-- iMRH0041D [Running]
-- iMRH0073B [Exists]
+- iMRH0041D [Completed]
+- iMRH0073B [In Progress]
 - iMRH0081A [Exists]
 
 Paths below: 

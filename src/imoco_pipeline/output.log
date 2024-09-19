@@ -1,0 +1,28 @@
+nohup: ignoring input
+2024-09-19 15:50:34,203 - INFO - Loaded 2 scans from CSV.
+2024-09-19 15:50:34,204 - INFO - Processing scan iMRH0114B
+2024-09-19 15:50:34,204 - INFO - Processing scan iMRH0114A
+2024-09-19 15:50:34,205 - INFO - Copying files from /mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0114/iMRH0114B/pfiles/Exam9739_Series8_UTE to /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/raw_data.
+2024-09-19 15:50:34,205 - INFO - Copying files from /mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0114/iMRH0114A/pfiles/Exam9274_Series8_UTE to /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/raw_data.
+2024-09-19 15:52:20,731 - INFO - Successfully copied /mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0114/iMRH0114A/pfiles/Exam9274_Series8_UTE to /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/raw_data
+2024-09-19 15:52:20,748 - INFO - Found .h5 file: ScanArchive_604875MR750_20221101_095941642.h5
+2024-09-19 15:52:20,757 - INFO - Creating pcvipr script for iMRH0114A
+2024-09-19 15:52:20,832 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/pcvipr.sh
+2024-09-19 15:52:20,839 - INFO - Running pcvipr script for iMRH0114A
+2024-09-19 15:52:21,471 - INFO - SLURM job submitted successfully. Output:
+Submitted batch job 231191
+
+2024-09-19 15:52:21,473 - INFO - Waiting for job 231191 to complete.
+2024-09-19 15:52:21,565 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 15:52:40,881 - INFO - Successfully copied /mnt/cifs/ash.sandhu/fs/RespResearch/!RAYMENT/Active Studies/iMRH Registry/Data/iMRH0114/iMRH0114B/pfiles/Exam9739_Series8_UTE to /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/raw_data
+2024-09-19 15:52:40,882 - INFO - Found .h5 file: ScanArchive_604875MR750_20230505_144147660.h5
+2024-09-19 15:52:40,882 - INFO - Creating pcvipr script for iMRH0114B
+2024-09-19 15:52:40,893 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/pcvipr.sh
+2024-09-19 15:52:40,894 - INFO - Running pcvipr script for iMRH0114B
+2024-09-19 15:52:40,905 - INFO - SLURM job submitted successfully. Output:
+Submitted batch job 231192
+
+2024-09-19 15:52:40,905 - INFO - Waiting for job 231192 to complete.
+2024-09-19 15:52:40,915 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 15:55:41,577 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 15:56:00,991 - INFO - Job 231192 is still running. Checking again in 200 seconds.

@@ -43,6 +43,8 @@ class Controller:
                     except Exception as e:
                         logging.error(f"An error occurred: {e}")
 
+
+
 if __name__ == "__main__":
     # Load paths
     with open('imoco.yaml', 'r') as file:
@@ -51,4 +53,3 @@ if __name__ == "__main__":
     controller = Controller(yaml_data['gpcc_scratch_path'])
     controller.load_scans_from_csv(yaml_data['csv_file_path'])
     controller.process_scans_in_batches(batch_size=2)
-

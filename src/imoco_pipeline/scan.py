@@ -80,9 +80,9 @@ class Scan:
                                 scan_data_path=self.scan_data_path, 
                                 lammy=lammy
                                 )
-            #logging.info(f"Running imoco script for {self.scan_id} with {lammy} regularization")
+            logging.info(f"Running imoco script for {self.scan_id} with {lammy} regularization")
             # submit script
-            #submit_slurm_job(script_path=self.imoco_script,
-            #                cwd_path=self.scan_data_path)
+            submit_slurm_job(script_path=imoco_script_path,
+                            cwd_path=self.scan_data_path)
 
 

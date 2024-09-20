@@ -22,6 +22,8 @@ echo '----- Starting IMOCO-Recon -----'
 python3 \$imoco_dir/recon_imoco.py MRI_Raw --reg_flag 1 --lambda_TV {LAMMY}
 echo '----- Converting to DICOM -----'
 python3 \$imoco_dir/dicom_creation.py \$file_dir
+mkdir -p imoco_recon_{LAMMY}
+mv *.DCM imoco_recon_{LAMMY}/
 "
 
 

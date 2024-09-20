@@ -26,3 +26,27 @@ Submitted batch job 231192
 2024-09-19 15:52:40,915 - INFO - Job 231192 is still running. Checking again in 200 seconds.
 2024-09-19 15:55:41,577 - INFO - Job 231191 is still running. Checking again in 200 seconds.
 2024-09-19 15:56:00,991 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 15:59:01,592 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 15:59:21,005 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 16:02:21,606 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 16:02:41,019 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 16:05:41,621 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 16:06:01,059 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 16:09:01,635 - INFO - Job 231191 is still running. Checking again in 200 seconds.
+2024-09-19 16:09:21,072 - INFO - Job 231192 is still running. Checking again in 200 seconds.
+2024-09-19 16:12:21,646 - INFO - Job 231191 has completed.
+2024-09-19 16:12:21,647 - INFO - Creating imoco script for iMRH0114A
+2024-09-19 16:12:21,663 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.sh
+2024-09-19 16:12:21,677 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.01.sh
+2024-09-19 16:12:21,690 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.025.sh
+2024-09-19 16:12:21,702 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.05.sh
+2024-09-19 16:12:21,731 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.075.sh
+2024-09-19 16:12:21,743 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114A/scripts/imoco_lammy_0.1.sh
+2024-09-19 16:12:41,086 - INFO - Job 231192 has completed.
+2024-09-19 16:12:41,086 - INFO - Creating imoco script for iMRH0114B
+2024-09-19 16:12:41,100 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.sh
+2024-09-19 16:12:41,114 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.01.sh
+2024-09-19 16:12:41,125 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.025.sh
+2024-09-19 16:12:41,135 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.05.sh
+2024-09-19 16:12:41,146 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.075.sh
+2024-09-19 16:12:41,155 - INFO - Script generated at /mnt/scratch/Precision/BioStats/ASandhu/data/iMRH0114B/scripts/imoco_lammy_0.1.sh

@@ -6,4 +6,5 @@ src/pipeline/log/*
 src/imoco_pipeline/__pycache__/*
 src/imoco_pipeline/logs/*
 src/imoco_pipeline/nohup.out
-
+*.DCM 
+*.dcm

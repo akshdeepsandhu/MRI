@@ -6,7 +6,6 @@ This is markdown file with useful links to resources on Pulmonary MRI imaging
 module load apptainer
 apptainer build pcvipr_latest.sif docker-archive://orc20_pcvipr.tar.gz
 
-
 # Loading conda
 source /mnt/common/Precision/Miniconda3/miniconda/etc/profile.d/conda.sh
 conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transfer
@@ -15,59 +14,8 @@ conda activate /mnt/common/Precision/Miniconda3/opt/miniconda3/envs/imoco_transf
 - https://github.com/PulmonaryMRI/
 - https://github.com/PulmonaryMRI/imoco_recon
 - https://larsonlab.github.io/MRI-education-resources/Introduction.html
-
-# Running pcvipr shell (CPU)
-salloc --mem=128G --cpus-per-task=4
-module load apptainer
-apptainer shell --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif
-pcvipr_recon_binary -f ScanArchive_604875MR750_20221215_151036572.h5 -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
+- https://sbme-tutorials.github.io/2018/cv/notes/7_week7.html
 
 
-# IMOCO 
 
-
-## Running pipeline 
-1. run `activate_imoco_transfer` in bash to ensure correct env is being used
-2. check imoco.yml 
-3. check mri_scan_paths.csv is up to date 
-4. Navigate to source directory with controller.py file
-5. run `nohup python controller.py`
-
-# Running interactive shell (GPU)
-1. Allocate mem and run on HPC: `salloc --mem=32G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q`
-2. Run Apptainer sif with mounted dir: `singularity shell --nv \ 
-													--bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data \ 
-													/mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu.sif`
-
-# Running imoco recon (GPU): 
-1. Once shell is active, activate virutal env `source /usr/local/.gpu_venv/bin/activate`
-2. Define useful variable: `imoco_dir=/usr/src/` ; `file_dir=/container_data/iMRHXXX/` 
-3. [Optional] Convert raw .h5 file into correct format: `python3 imoco_recon/imoco_py/convert_uwute.py ${file_dir}/MRI_Raw`
-4. Run recon: 
-	a. xd-grasp reconstruction: `python3 imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw`
-	b. mocolor reconstruction: `python3 imoco_recon/imoco_py/recon_imoco.py ${file_dir}/MRI_Raw --reg_flag 1 --lambda_TV 0.01`
-
-# Script: (once in GPU node)
-`
-salloc --mem=128G --cpus-per-task=4 --nodes=1 --partition=wasserman_gpu_q
-module load singularity cuda11.4/toolkit/11.4.2
-singularity shell --nv --bind /mnt/scratch/Precision/BioStats/ASandhu/data:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu_latest.sif
-source /usr/local/.gpu_venv/bin/activate
-file_dir=/container_data/iMRH0074B/
-imoco_dir=/usr/src/
-python3 $imoco_dir/imoco_recon/imoco_py/recon_xdgrasp.py ${file_dir}/MRI_Raw
-python3 $imoco_dir/imoco_recon/imoco_py/recon_imoco.py ${file_dir}/MRI_Raw --reg_flag 1 --device 0 
-python3 $imoco_dir/imoco_recon/imoco_py/dicom_creation.py ${file_dir}
-`
-
-# Running interactive shell (CPU)
-
-1. Allocate mem and run on HPC: `salloc --mem=128G --cpus-per-task=12 --nodes=1`
-2. Run Apptainer Container with Mounted Directory: `singularity shell --bind /mnt/common/Precision/Biostats/asandhu/data/:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_cpu.sif /bin/bash`
-
-# Running imoco recon (CPU):
-
-1. Once apptainer shell is active, activate virtual env with all the packages we need: `source /.gpu_venv/bin/activate`
-2. Run recon (w/ field derivation): `python3 imoco_recon/imoco_py/recon_imoco.py /container_data/lung_mri/MRI_Raw --reg_flag 1 --device -1`
-3. Run recon (w/out field derivation): `python3 imoco_recon/imoco_py/recon_xdgrasp.py /container_data/lung_mri/MRI_Raw --device -1`
 

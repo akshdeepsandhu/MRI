@@ -1,4 +1,4 @@
-import pandas as pd
+client.import pandas as pd
 import logging
 from scan import Scan
 from utils import setup_logging

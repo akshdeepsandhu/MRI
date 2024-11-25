@@ -16,4 +16,6 @@ pcvipr_recon_binary -f {H5_FILE_NAME} -pils -dat_plus_dicom -resp_gate thresh -p
 rm *.txt
 rm *.dat
 rm *.complex
+mkdir base_recon
+mv *.dcm base_recon/
 "

@@ -1,8 +1,8 @@
 import os 
-import logging 
-import shutil 
 import subprocess
-import io
+from time import sleep
+from setup_logging import logger
+
 
 class Scan: 
     def __init__(self, scan_id, data_path):
@@ -50,11 +50,37 @@ class Scan:
             os.chmod(script_path, 0o755)
             logging.info(f"Script written to file: {script_path}")
 
+    
 
+    def submit_slurm_job(self) ->  None:
+        try:
+            result = subprocess.run(f'sbatch {self.pcvipr_script_name}',
+                                    cwd=self.data_path,
+                                    shell=True,
+                                    check=True,
+                                    capture_output=True,
+                                    text=True)
+            logging.info(f"SLURM job submitted successfully. Output:\n{result.stdout}")
+            job_id = result.stdout.strip().split()[-1]  
+            self.wait_for_job_completion(job_id)
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
+            raise
+    
+    def wait_for_job_completion(self, job_id: str) -> None:
+        logging.info(f"Waiting for job {job_id} to complete.")
+        while True:
+            result = subprocess.run(f'squeue --job {job_id}', shell=True, capture_output=True, text=True)
+            if job_id not in result.stdout:
+                logging.info(f"Job {job_id} has completed.")
+                break
+            else:
+                wait_time = 200
+                logging.info(f"Job {job_id} is still running. Checking again in {wait_time} seconds.")
+                sleep(wait_time)
 
 if __name__ == '__main__':
-    data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/db/imrh-data/iMRH0128B'
-    test_scan = Scan('iMRH0128B', data_path)
+    data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C'
+    test_scan = Scan('iMRH0039C', data_path)
     print(test_scan.h5_file_path)
-    # add to bucket
     test_scan.write_pcvipr_script(write_to_file=True)

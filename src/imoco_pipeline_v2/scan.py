@@ -14,73 +14,107 @@ class Scan:
     def _set_h5_file_path(self) -> str: 
         for file in os.listdir(self.data_path):
             if file.endswith('.h5') and not file.endswith('Raw.h5'):
-                logging.info(f"Found .h5 file: {file}")
+                logger.info(f"Found .h5 file: {file}")
                 return f'{self.data_path}/{file}'
             else: 
-                logging.warning("No .h5 file found in the copied folder.")
-                return None
+                logger.warning("No .h5 file found in the copied folder.")
+                return 
             
 
-    def make_script_content(self, template_path: str, replacements: dict) -> str:
+    def _make_script_content(self, template_path: str, script_path: str, replacements: dict) -> bool:
+        try: 
+            with open(template_path, 'r') as template_file:
+                template_content = template_file.read()
 
-        with open(template_path, 'r') as template_file:
-            template_content = template_file.read()
+            for placeholder, value in replacements.items():
+                template_content = template_content.replace(placeholder, value)
 
-        for placeholder, value in replacements.items():
-            template_content = template_content.replace(placeholder, value)
+            with open(script_path, 'w') as script_file:
+                script_file.write(template_content)
 
-        return template_content
+            os.chmod(script_path, 0o755)
+            logger.info(f"Script written to file: {script_path}")
 
-    def write_pcvipr_script(self, write_to_file=True) -> None:
+        except Exception as e:
+                logger.error(f"An unexpected error occurred: {e}")
+                raise
+    
 
-        self.pcvipr_script_name = f"{self.scan_id}_pcvipr.sh"
+    def _submit_slurm_job(self, job_script : str, job_dir: str) ->  None:
+        try:
+            result = subprocess.run(f'sbatch {job_script}',
+                                    cwd=job_dir,
+                                    shell=True,
+                                    check=True,
+                                    capture_output=True,
+                                    text=True)
+            logger.info(f"SLURM job submitted successfully. Output: {result.stdout}")
+            job_id = result.stdout.strip().split()[-1]  
+            self._wait_for_job_completion(job_id)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
+            raise
+    
 
-        script_content = self.make_script_content(
+    def _wait_for_job_completion(self, job_id: str) -> None:
+        logger.info(f"Waiting for job {job_id} to complete.")
+        while True:
+            result = subprocess.run(f'squeue --job {job_id}', shell=True, capture_output=True, text=True)
+            if job_id not in result.stdout:
+                logger.info(f"Job {job_id} has completed.")
+                break
+            else:
+                wait_time = 180
+                logger.info(f"Job {job_id} is still running. Checking again in {wait_time} seconds.")
+                sleep(wait_time)
+    
+
+    def _write_pcvipr_script(self) -> str:
+
+        pcvipr_script_name = f"{self.scan_id}_pcvipr.sh"
+        pcvipr_script_path = os.path.join(self.data_path, pcvipr_script_name)
+
+        self._make_script_content(
             template_path="templates/pcvipr_template.sh",
+            script_path=pcvipr_script_path,
             replacements={
                 '{SCAN_DATA_PATH}': self.data_path,
                 '{H5_FILE_NAME}': self.h5_file_path
             }
         )
 
-        if write_to_file:
-            script_path = os.path.join(self.data_path, self.pcvipr_script_name)
-            with open(script_path, 'w') as script_file:
-                script_file.write(script_content)
-            os.chmod(script_path, 0o755)
-            logging.info(f"Script written to file: {script_path}")
-
+        return pcvipr_script_name
     
 
-    def submit_slurm_job(self) ->  None:
-        try:
-            result = subprocess.run(f'sbatch {self.pcvipr_script_name}',
-                                    cwd=self.data_path,
-                                    shell=True,
-                                    check=True,
-                                    capture_output=True,
-                                    text=True)
-            logging.info(f"SLURM job submitted successfully. Output:\n{result.stdout}")
-            job_id = result.stdout.strip().split()[-1]  
-            self.wait_for_job_completion(job_id)
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
-            raise
-    
-    def wait_for_job_completion(self, job_id: str) -> None:
-        logging.info(f"Waiting for job {job_id} to complete.")
-        while True:
-            result = subprocess.run(f'squeue --job {job_id}', shell=True, capture_output=True, text=True)
-            if job_id not in result.stdout:
-                logging.info(f"Job {job_id} has completed.")
-                break
-            else:
-                wait_time = 200
-                logging.info(f"Job {job_id} is still running. Checking again in {wait_time} seconds.")
-                sleep(wait_time)
+    def _write_imoco_script(self, lammy) -> str: 
+        
+        imoco_script_name = f"{self.scan_id}_imoco_lammy_{lammy}.sh"
+        imoco_script_path = os.path.join(self.data_path, imoco_script_name)
+        self._make_script_content(
+            template_path="templates/imoco_lammy_template.sh",
+            script_path=imoco_script_path,
+            replacements={
+                '{SCAN_DATA_PATH}': self.data_path,
+                 '{LAMMY}' : str(lammy),
+            }
+        )
+
+        return imoco_script_name
+
+    def run_pcvipr_job(self) -> None: 
+        pcvipr_script = self._write_pcvipr_script()
+        self._submit_slurm_job(job_script=pcvipr_script,job_dir=self.data_path)
+        
+    def run_imoco_job(self, lammy_lst: list) -> None: 
+        
+        for lammy in lammy_lst:
+            imoco_script = self._write_imoco_script(lammy=lammy)
+            self._submit_slurm_job(job_script=imoco_script,job_dir=self.data_path)
+            
 
 if __name__ == '__main__':
     data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C'
     test_scan = Scan('iMRH0039C', data_path)
-    print(test_scan.h5_file_path)
-    test_scan.write_pcvipr_script(write_to_file=True)
+    #test_scan.run_pcvipr_job()
+    test_scan._write_pcvipr_script()
+    test_scan._write_imoco_script(lammy=0.05)

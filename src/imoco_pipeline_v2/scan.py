@@ -115,8 +115,7 @@ class Scan:
 if __name__ == '__main__':
     data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C/'
     test_scan = Scan('iMRH0039C', data_path)
-    #test_scan.run_pcvipr_job()
-    test_scan._write_pcvipr_script()
     lammy_list = np.linspace(0,0.05,5)
-    test_scan._write_imoco_script(lammy=0.05)
+    print(lammy_list)
+    test_scan.run_imoco_job(lammy_lst=lammy_list)
 

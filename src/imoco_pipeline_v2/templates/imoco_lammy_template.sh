@@ -21,9 +21,8 @@ python \$imoco_dir/recon_xdgrasp_npy.py \$file_dir
 echo '----- Starting IMOCO-Recon -----'
 python \$imoco_dir/recon_imoco_npy.py \$file_dir --reg_flag 1 --lambda_TV {LAMMY} 
 echo '----- Converting to DICOM -----'
-python \$imoco_dir/dicom_creation_npy.py \$file_dir
-mkdir -p imoco_recon_{LAMMY}
-mv *.DCM imoco_recon_{LAMMY}/
+python \$imoco_dir/dicom_from_npy.py \$file_dir \$file_dir/base_recon/
+rm *.npy
 "
 
 

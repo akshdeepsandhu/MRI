@@ -18,4 +18,6 @@ rm *.dat
 rm *.complex
 mkdir base_recon
 mv *.dcm base_recon/
+mkdir -p archv 
+mv {H5_FILE_NAME} archv
 "

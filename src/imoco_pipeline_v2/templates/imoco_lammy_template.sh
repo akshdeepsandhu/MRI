@@ -13,15 +13,15 @@ cd {SCAN_DATA_PATH}
 singularity exec --nv /mnt/scratch/Precision/BioStats/ASandhu/images/imoco_gpu_latest.sif bash -c "
 source /usr/local/.gpu_venv/bin/activate
 file_dir={SCAN_DATA_PATH}
-imoco_dir=/usr/src/imoco_recon/imoco_py
+imoco_dir=/usr/src/imoco_recon/imoco_npy
 echo '----- Starting Conversion -----'
-python3 \$imoco_dir/convert_uwute.py MRI_Raw
+python \$imoco_dir/convert_uwute_npy.py MRI_Raw
 echo '----- Starting XD-Grasp -----'
-python3 \$imoco_dir/recon_xdgrasp.py MRI_Raw 
+python \$imoco_dir/recon_xdgrasp_npy.py \$file_dir 
 echo '----- Starting IMOCO-Recon -----'
-python3 \$imoco_dir/recon_imoco.py MRI_Raw --reg_flag 1 --lambda_TV {LAMMY}
+python \$imoco_dir/recon_imoco_npy.py \$file_dir --reg_flag 1 --lambda_TV {LAMMY} 
 echo '----- Converting to DICOM -----'
-python3 \$imoco_dir/dicom_creation.py \$file_dir
+python \$imoco_dir/dicom_creation_npy.py \$file_dir
 mkdir -p imoco_recon_{LAMMY}
 mv *.DCM imoco_recon_{LAMMY}/
 "

@@ -2,6 +2,7 @@ import os
 import subprocess
 from time import sleep
 from setup_logging import logger
+import numpy as np
 
 
 class Scan: 
@@ -105,16 +106,17 @@ class Scan:
         pcvipr_script = self._write_pcvipr_script()
         self._submit_slurm_job(job_script=pcvipr_script,job_dir=self.data_path)
         
-    def run_imoco_job(self, lammy_lst: list) -> None: 
-        
+    def run_imoco_job(self, lammy_lst: np.array ) -> None: 
         for lammy in lammy_lst:
-            imoco_script = self._write_imoco_script(lammy=lammy)
+            imoco_script = self._write_imoco_script(lammy=np.round(lammy,4))
             self._submit_slurm_job(job_script=imoco_script,job_dir=self.data_path)
             
 
 if __name__ == '__main__':
-    data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C'
+    data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C/'
     test_scan = Scan('iMRH0039C', data_path)
     #test_scan.run_pcvipr_job()
     test_scan._write_pcvipr_script()
+    lammy_list = np.linspace(0,0.05,5)
     test_scan._write_imoco_script(lammy=0.05)
+

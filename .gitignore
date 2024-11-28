@@ -8,3 +8,4 @@ src/imoco_pipeline/logs/*
 src/imoco_pipeline/nohup.out
 *.DCM 
 *.dcm
+*logging.txt

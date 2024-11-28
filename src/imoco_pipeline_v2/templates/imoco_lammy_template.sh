@@ -23,6 +23,7 @@ python \$imoco_dir/recon_imoco_npy.py \$file_dir --reg_flag 1 --lambda_TV {LAMMY
 echo '----- Converting to DICOM -----'
 python \$imoco_dir/dicom_from_npy.py \$file_dir \$file_dir/base_recon/
 rm *.npy
+mv imoco_dcm/ imoco_dcm_{LAMMY}/
 "
 
 

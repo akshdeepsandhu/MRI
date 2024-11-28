@@ -1,88 +1,121 @@
-import os
-import logging
-import shutil
+import os 
 import subprocess
-import glob
-from utils import generate_pcvipr_script, generate_imoco_script, generate_imoco_script_lammy, submit_slurm_job
+from time import sleep
+from setup_logging import logger
 
-class Scan:
-    def __init__(self, scan_id, raw_data_path, gpcc_scratch_path):
+
+
+class Scan: 
+    def __init__(self, scan_id : str, data_path : str):
         self.scan_id = scan_id
-        self.raw_data_path = raw_data_path
-        self.gpcc_scratch_path = gpcc_scratch_path
-        self.scan_data_path = os.path.join(gpcc_scratch_path,scan_id,"raw_data")
+        self.data_path = data_path
+        self.h5_file_path = self._set_h5_file_path()
 
-        # vars for later
-        self.h5_file_name = None
-        self.pcvipr_script = os.path.join(gpcc_scratch_path,scan_id,"scripts","pcvipr.sh")
-        self.imoco_script = os.path.join(gpcc_scratch_path,scan_id,"scripts","imoco.sh")
 
-    def copy_raw_data(self):
-        logging.info(f"Copying files from {self.raw_data_path} to {self.scan_data_path}.")
-        if os.path.exists(self.scan_data_path):
-            logging.info(f"Folder already exists: {self.scan_data_path}. Skipping copy.")
-            return
-        try:
-            shutil.copytree(self.raw_data_path, self.scan_data_path)
-            logging.info(f"Successfully copied {self.raw_data_path} to {self.scan_data_path}")
+    def _set_h5_file_path(self) -> str: 
+        for file in os.listdir(self.data_path):
+            if file.endswith('.h5') and not file.endswith('Raw.h5'):
+                logger.info(f"Found .h5 file: {file}")
+                return f'{self.data_path}/{file}'
+            else: 
+                logger.warning("No .h5 file found in the copied folder.")
+                return 
+            
+
+    def _make_script_content(self, template_path: str, script_path: str, replacements: dict) -> bool:
+        try: 
+            with open(template_path, 'r') as template_file:
+                template_content = template_file.read()
+
+            for placeholder, value in replacements.items():
+                template_content = template_content.replace(placeholder, value)
+
+            with open(script_path, 'w') as script_file:
+                script_file.write(template_content)
+
+            os.chmod(script_path, 0o755)
+            logger.info(f"Script written to file: {script_path}")
+
         except Exception as e:
-            raise IOError(f"Error copying {self.raw_data_path} to {self.scan_data_path}: {e}")
+                logger.error(f"An unexpected error occurred: {e}")
+                raise
     
-    def get_h5_file(self):
+
+    def _submit_slurm_job(self, job_script : str, job_dir: str) ->  None:
         try:
-            for file in os.listdir(self.scan_data_path):
-                if file.endswith(".h5"):
-                    logging.info(f"Found .h5 file: {file}")
-                    return file
-            logging.warning("No .h5 file found in the copied folder.")
-            return None
-        except FileNotFoundError as e:
-            logging.error(f"Directory not found: {self.scan_data_path}")
+            result = subprocess.run(f'sbatch {job_script}',
+                                    cwd=job_dir,
+                                    shell=True,
+                                    check=True,
+                                    capture_output=True,
+                                    text=True)
+            logger.info(f"SLURM job submitted successfully. Output: {result.stdout}")
+            job_id = result.stdout.strip().split()[-1]  
+            self._wait_for_job_completion(job_id)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Error submitting SLURM job. Return code: {e.returncode}\nOutput:\n{e.output}\nError:\n{e.stderr}")
             raise
     
-    def setup_dirs(self):
-        self.copy_raw_data()
-        self.h5_file_name = self.get_h5_file()
-        if not self.h5_file_name:
-            raise FileNotFoundError("No .h5 file found in the copied folder. Aborting process.") 
-    
-    def pcvipr(self):
-        # run pcvipr
-        # make script 
-        logging.info(f"Creating pcvipr script for {self.scan_id}")
-        generate_pcvipr_script(script_path=self.pcvipr_script,
-                               scan_data_path=self.scan_data_path,
-                               h5_file_name=self.h5_file_name)
-        logging.info(f"Running pcvipr script for {self.scan_id}")
-        # submit script
-        submit_slurm_job(script_path=self.pcvipr_script,
-                         cwd_path=self.scan_data_path)
-    
-    def imoco(self):
-        # run imoco 
-        # make script
-        logging.info(f"Creating imoco script for {self.scan_id}")
-        generate_imoco_script(script_path=self.imoco_script,
-                             scan_data_path=self.scan_data_path)
-        #logging.info(f"Running imoco script for {self.scan_id}")
-        # submit script
-        #submit_slurm_job(script_path=self.imoco_script,
-        #                 cwd_path=self.scan_data_path)
-    
-    def imoco_lammy(self):
-        # run imoco 
-        # make script
-        logging.info(f"Creating imoco script for {self.scan_id}")
-        lammy_list = [0,0.01,0.025,0.05,0.075,0.1]
-        for lammy in lammy_list:
-            imoco_script_path = os.path.join(self.gpcc_scratch_path,self.scan_id,"scripts",f"imoco_lammy_{lammy}.sh")
-            generate_imoco_script_lammy(script_path=imoco_script_path,
-                                scan_data_path=self.scan_data_path, 
-                                lammy=lammy
-                                )
-            logging.info(f"Running imoco script for {self.scan_id} with {lammy} regularization")
-            # submit script
-            submit_slurm_job(script_path=imoco_script_path,
-                            cwd_path=self.scan_data_path)
 
+    def _wait_for_job_completion(self, job_id: str) -> None:
+        logger.info(f"Waiting for job {job_id} to complete.")
+        while True:
+            result = subprocess.run(f'squeue --job {job_id}', shell=True, capture_output=True, text=True)
+            if job_id not in result.stdout:
+                logger.info(f"Job {job_id} has completed.")
+                break
+            else:
+                wait_time = 180
+                logger.info(f"Job {job_id} is still running. Checking again in {wait_time} seconds.")
+                sleep(wait_time)
+    
+
+    def _write_pcvipr_script(self) -> str:
+
+        pcvipr_script_name = f"{self.scan_id}_pcvipr.sh"
+        pcvipr_script_path = os.path.join(self.data_path, pcvipr_script_name)
+
+        self._make_script_content(
+            template_path="templates/pcvipr_template.sh",
+            script_path=pcvipr_script_path,
+            replacements={
+                '{SCAN_DATA_PATH}': self.data_path,
+                '{H5_FILE_NAME}': self.h5_file_path
+            }
+        )
+
+        return pcvipr_script_name
+    
+
+    def _write_imoco_script(self, lammy: float) -> str: 
+        
+        imoco_script_name = f"{self.scan_id}_imoco_lammy_{lammy}.sh"
+        imoco_script_path = os.path.join(self.data_path, imoco_script_name)
+        self._make_script_content(
+            template_path="templates/imoco_lammy_template.sh",
+            script_path=imoco_script_path,
+            replacements={
+                '{SCAN_DATA_PATH}': self.data_path,
+                 '{LAMMY}' : str(lammy),
+            }
+        )
+
+        return imoco_script_name
+
+    def run_pcvipr_job(self) -> None: 
+        pcvipr_script = self._write_pcvipr_script()
+        self._submit_slurm_job(job_script=pcvipr_script,job_dir=self.data_path)
+        
+    def run_imoco_job(self, lammy_lst: list ) -> None: 
+        for lammy in lammy_lst:
+            imoco_script = self._write_imoco_script(lammy=lammy)
+            self._submit_slurm_job(job_script=imoco_script,job_dir=self.data_path)
+            
+
+if __name__ == '__main__':
+    data_path = '/mnt/scratch/Precision/BioStats/ASandhu/imrh_warehouse/data/iMRH0039C/'
+    test_scan = Scan('iMRH0039C', data_path)
+    lammy_list = [0,0.01,0.02,0.03,0.04,0.05]
+    print(lammy_list)
+    test_scan.run_imoco_job(lammy_lst=lammy_list)
 

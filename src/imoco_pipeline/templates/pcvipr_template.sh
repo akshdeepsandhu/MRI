@@ -13,8 +13,11 @@ module load apptainer
 apptainer exec --bind {SCAN_DATA_PATH}:/container_data /mnt/scratch/Precision/BioStats/ASandhu/images/pcvipr_latest.sif bash -c "
 cd {SCAN_DATA_PATH}
 pcvipr_recon_binary -f {H5_FILE_NAME} -pils -dat_plus_dicom -resp_gate thresh -pregate_kdata -export_kdata
-rm {H5_FILE_NAME}
 rm *.txt
 rm *.dat
 rm *.complex
+mkdir base_recon
+mv *.dcm base_recon/
+mkdir -p archv 
+mv {H5_FILE_NAME} archv
 "
